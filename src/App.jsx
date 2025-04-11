@@ -1,5 +1,11 @@
+import ShowNote from "./ShowNote";
+
 function App() {
-  return <div>Notes app</div>;
+  return (
+    <div>
+      <h1>Hello World</h1>
+    </div>
+  );
 }
 
 export default App;
