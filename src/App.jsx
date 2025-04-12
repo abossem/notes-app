@@ -1,3 +1,4 @@
+import AddNote from "./AddNote";
 import { useNote } from "./context/NotesContext";
 
 function App() {
@@ -9,9 +10,14 @@ function App() {
 
       <div>
         {notes.map((note) => (
-          <p key={note?.id}>{note.content}</p>
+          <div key={note?.id}>
+            <p>{note.title}</p>
+            <p>{note.content}</p>
+          </div>
         ))}
       </div>
+
+      <AddNote />
     </div>
   );
 }
