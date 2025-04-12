@@ -27,14 +27,6 @@ export async function getNote(id) {
   return note;
 }
 
-export async function deleteNote(id) {
-  const { error } = await supabase.from("note").delete().eq("id", id);
-
-  if (error) {
-    throw new Error(error);
-  }
-}
-
 export async function addNote(note) {
   const { error } = await supabase.from("note").insert([
     {
@@ -49,4 +41,34 @@ export async function addNote(note) {
     throw new Error(error);
   }
   toast.success("Note added successfully");
+}
+
+export async function updateNote(note) {
+  const { error } = await supabase
+    .from("note")
+    .update({
+      title: note.title,
+      content: note.content,
+    })
+    .eq("id", note.id)
+    .select();
+
+  if (error) {
+    toast.error("Could not update note");
+
+    throw new Error(error);
+  }
+
+  toast.success("Note updated successfully");
+}
+
+export async function deleteNote(id) {
+  const { error } = await supabase.from("note").delete().eq("id", id);
+
+  if (error) {
+    toast.error("Could not delete note");
+    throw new Error(error);
+  }
+
+  toast.success("Note deleted successfully");
 }
