@@ -28,23 +28,27 @@ export async function getNote(id) {
 }
 
 export async function addNote(note) {
-  const { error } = await supabase.from("note").insert([
-    {
-      title: note?.title,
-      content: note?.content,
-    },
-  ]);
+  const { data, error } = await supabase
+    .from("note")
+    .insert([
+      {
+        title: note?.title,
+        content: note?.content,
+      },
+    ])
+    .select();
 
   if (error) {
     toast.error("Could not add note");
-
     throw new Error(error);
   }
+
   toast.success("Note added successfully");
+  return data[0];
 }
 
 export async function updateNote(note) {
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("note")
     .update({
       title: note?.title,
@@ -55,11 +59,11 @@ export async function updateNote(note) {
 
   if (error) {
     toast.error("Could not update note");
-
     throw new Error(error);
   }
 
   toast.success("Note updated successfully");
+  return data[0];
 }
 
 export async function deleteNote(id) {
