@@ -30,8 +30,8 @@ export async function getNote(id) {
 export async function addNote(note) {
   const { error } = await supabase.from("note").insert([
     {
-      title: note.title,
-      content: note.content,
+      title: note?.title,
+      content: note?.content,
     },
   ]);
 
@@ -47,10 +47,10 @@ export async function updateNote(note) {
   const { error } = await supabase
     .from("note")
     .update({
-      title: note.title,
-      content: note.content,
+      title: note?.title,
+      content: note?.content,
     })
-    .eq("id", note.id)
+    .eq("id", note?.id)
     .select();
 
   if (error) {
