@@ -32,7 +32,7 @@ export async function logout() {
 export async function getCurrentUser() {
   const { data: session } = await supabase.auth.getSession();
 
-  if (!session) {
+  if (!session.session) {
     toast.error("Could not get session");
     return null;
   }
