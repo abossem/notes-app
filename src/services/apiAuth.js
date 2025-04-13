@@ -91,6 +91,7 @@ export async function signup({ email, password }) {
 }
 
 // GET USER
+
 // curl -X GET 'https://wajnfgvynztsmpfaypsf.supabase.co/auth/v1/user'
 // -H "apikey: SUPABASE_KEY"
 // -H "Authorization: Bearer USER_TOKEN"
