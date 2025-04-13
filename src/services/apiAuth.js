@@ -1,6 +1,16 @@
 import toast from "react-hot-toast";
 import supabase from "./supabase";
 
+// LOGIN
+
+// curl -X POST 'https://wajnfgvynztsmpfaypsf.supabase.co/auth/v1/token?grant_type=password'
+// -H "apikey: SUPABASE_KEY"
+// -H "Content-Type: application/json"
+// -d '{
+//   "email": "someone@email.com",
+//   "password": "izJcxIbjbdjrbVrbLJgk"
+// }'
+
 export async function login({ email, password }) {
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
@@ -16,6 +26,12 @@ export async function login({ email, password }) {
 
   return data;
 }
+
+// LOGOUT
+// curl -X POST 'https://wajnfgvynztsmpfaypsf.supabase.co/auth/v1/logout'
+// -H "apikey: SUPABASE_KEY"
+// -H "Content-Type: application/json"
+// -H "Authorization: Bearer USER_TOKEN"
 
 export async function logout() {
   const { error } = await supabase.auth.signOut();
@@ -52,6 +68,15 @@ export async function getCurrentUser() {
   };
 }
 
+//SIGNUP
+// curl -X POST 'https://wajnfgvynztsmpfaypsf.supabase.co/auth/v1/signup'
+// -H "apikey: SUPABASE_KEY"
+// -H "Content-Type: application/json"
+// -d '{
+//   "email": "someone@email.com",
+//   "password": "izJcxIbjbdjrbVrbLJgk"
+// }'
+
 export async function signup({ email, password }) {
   const { data, error } = await supabase.auth.signUp({ email, password });
 
@@ -64,3 +89,8 @@ export async function signup({ email, password }) {
 
   return data;
 }
+
+// GET USER
+// curl -X GET 'https://wajnfgvynztsmpfaypsf.supabase.co/auth/v1/user'
+// -H "apikey: SUPABASE_KEY"
+// -H "Authorization: Bearer USER_TOKEN"
