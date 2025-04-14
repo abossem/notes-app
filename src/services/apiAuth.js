@@ -74,11 +74,14 @@ export async function getCurrentUser() {
 // -H "Content-Type: application/json"
 // -d '{
 //   "email": "someone@email.com",
-//   "password": "izJcxIbjbdjrbVrbLJgk"
+//   "password": "izJcxIbjbdjrbVrbLJgk",
 // }'
 
 export async function signup({ email, password }) {
-  const { data, error } = await supabase.auth.signUp({ email, password });
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+  });
 
   if (error) {
     toast.error("Could not signup");

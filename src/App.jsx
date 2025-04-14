@@ -1,7 +1,9 @@
+import Todo from "./pages/todo/Todo";
+
 function App() {
   return (
     <div>
-      <h1>Notes</h1>
+      <Todo />
     </div>
   );
 }
