@@ -1,17 +1,19 @@
 import { X } from "lucide-react";
 import { useState } from "react";
 import { addTask } from "../../services/apiTask";
+import { useTaskContext } from "../../context/TaskContext";
 
-function AddTask({ setIsOpen }) {
+// LATER ADD OPTIMISTIC UPDATE FOR TASKS
+function AddTask() {
   const [task, setTask] = useState("");
+  const { setIsOpen } = useTaskContext();
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
-    if (!task) return;
-
-    addTask(task);
+    await addTask(task);
     setIsOpen(false);
+
     setTask("");
   }
 
@@ -27,7 +29,7 @@ function AddTask({ setIsOpen }) {
 
       <form
         onSubmit={handleSubmit}
-        className="flex absolute top-[50%] -translate-y-[50%] left-[50%] translate-x-[-50%] flex-column justify-content-center items-center gap-4 bg-green-100 rounded-2xl p-5  mx-auto  shadow-lg"
+        className="flex absolute top-[50%] -translate-y-[50%] left-[50%] translate-x-[-50%] flex-col justify-center items-center gap-4 bg-green-100 rounded-2xl p-5  mx-auto  shadow-lg"
       >
         <input
           type="text"
