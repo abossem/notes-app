@@ -1,6 +1,20 @@
 import { X } from "lucide-react";
+import { useState } from "react";
+import { addTask } from "../../services/apiTask";
 
 function AddTask({ setIsOpen }) {
+  const [task, setTask] = useState("");
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    if (!task) return;
+
+    addTask(task);
+    setIsOpen(false);
+    setTask("");
+  }
+
   return (
     <div className="absolute top-0 w-full ">
       <div
@@ -11,8 +25,16 @@ function AddTask({ setIsOpen }) {
         <X size={30} color="#fff" className="cursor-pointer" />
       </div>
 
-      <form className="flex absolute top-[50%] -translate-y-[50%] left-[50%] translate-x-[-50%] flex-column justify-content-center items-center gap-4 bg-green-100 rounded-2xl p-5  mx-auto  shadow-lg">
-        <input type="text" placeholder="Add your task" />
+      <form
+        onSubmit={handleSubmit}
+        className="flex absolute top-[50%] -translate-y-[50%] left-[50%] translate-x-[-50%] flex-column justify-content-center items-center gap-4 bg-green-100 rounded-2xl p-5  mx-auto  shadow-lg"
+      >
+        <input
+          type="text"
+          placeholder="Add your task"
+          value={task}
+          onChange={(e) => setTask(e.target.value)}
+        />
 
         <button className="bg-green-800 px-5 py-3 text-center font-semibold rounded-2xl text-green-200 hover:-translate-y-1 hover:shadow-xl cursor-pointer transition-all duration-300 ease-in-out">
           Add Task

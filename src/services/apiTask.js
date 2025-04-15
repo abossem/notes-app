@@ -13,7 +13,7 @@ export async function getTasks() {
 }
 
 export async function addTask(task) {
-  const { data, error } = await supabase.from("task").insert([task]);
+  const { data, error } = await supabase.from("task").insert([{ task: task }]);
 
   if (error) {
     toast.error("Error adding task: " + error.message);
