@@ -1,8 +1,10 @@
+import HomePage from "./Pages/HomePage";
+
 function App() {
   return (
-    <div>
-      <h1>Notes</h1>
-    </div>
+    <>
+      <HomePage />
+    </>
   );
 }
 
