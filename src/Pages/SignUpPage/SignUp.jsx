@@ -1,5 +1,4 @@
 import { useState } from "react";
-import styles from "./../../Style/SignUp.module.css";
 import { signup } from "./../../services/apiAuth";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -33,11 +32,16 @@ export default function SignUp() {
 
   return (
     <>
-      <div className={styles.background}>
-        <div className={styles.shape}></div>
-        <div className={styles.shape}></div>
+      {" "}
+      <div className="w-[80%] h-[50%] absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -z-10">
+        <div className="h-[150px] w-[150px] absolute rounded-full bg-gradient-to-br from-[#1845ad] to-[#23a2f6] -left-[60px] -top-[60px]"></div>
+        <div className="h-[150px] w-[150px] absolute rounded-full bg-gradient-to-r from-[#ff512f] to-[#f09819] -right-[20px] -bottom-[60px]"></div>
       </div>
-      <form className={styles.form} onSubmit={SubmitFun}>
+      <form
+        className="w-[90%] max-w-[400px] bg-white/15 absolute top-1/2 left-1/2 rounded-[10px] -translate-x-1/2 -translate-y-1/2 backdrop-blur shadow-[0_0_40px_rgba(8,7,16,0.282)] border border-white/10"
+        style={{ padding: "20px 15px" }}
+        onSubmit={SubmitFun}
+      >
         <svg
           style={{ margin: "auto" }}
           className="logo"
@@ -54,15 +58,20 @@ export default function SignUp() {
           </g>
         </svg>
 
-        <label htmlFor="username">Username</label>
+        <label
+          htmlFor="username"
+          className="block text-[20px] font-medium"
+          style={{ marginTop: "15px" }}
+        >
+          Username
+        </label>
         <input
           type="text"
           placeholder="UserName"
           id="username"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className={styles.input}
-          style={{ backgroundColor: "#E8F0FE" }}
+          className="bg-[#E8F0FE] block h-[40px] w-[100%] rounded-[3px] text-[14px] font-light "
         />
         {name.trim().length < 1 && Accept && (
           <p style={{ fontSize: "15px", color: "red", marginLeft: "4px" }}>
@@ -70,7 +79,13 @@ export default function SignUp() {
           </p>
         )}
 
-        <label htmlFor="email">Email</label>
+        <label
+          htmlFor="email"
+          className="block text-[20px] font-medium"
+          style={{ marginTop: "15px" }}
+        >
+          Email
+        </label>
         <input
           type="email"
           placeholder="Email"
@@ -78,19 +93,22 @@ export default function SignUp() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className={styles.input}
-          style={{ backgroundColor: "#E8F0FE" }}
+          className="bg-[#E8F0FE] block h-[40px] w-[100%] rounded-[3px] text-[14px] font-light "
         />
-
-        <label htmlFor="password">Password</label>
+        <label
+          htmlFor="password"
+          className="block text-[20px] font-medium"
+          style={{ marginTop: "15px" }}
+        >
+          Password
+        </label>
         <input
           type="password"
           placeholder="Password"
           id="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className={styles.input}
-          style={{ backgroundColor: "#E8F0FE" }}
+          className="bg-[#E8F0FE] block h-[40px] w-[100%] rounded-[3px] text-[14px] font-light "
         />
         {password.length < 8 && Accept && (
           <p style={{ fontSize: "15px", color: "red", marginLeft: "4px" }}>
@@ -98,15 +116,20 @@ export default function SignUp() {
           </p>
         )}
 
-        <label htmlFor="RePassword">Repeat Password</label>
+        <label
+          htmlFor="RePassword"
+          className="block text-[20px] font-medium"
+          style={{ marginTop: "15px" }}
+        >
+          Repeat Password
+        </label>
         <input
           type="password"
           placeholder="Repeat Password"
           id="RePassword"
           value={rePassword}
           onChange={(e) => setRePassword(e.target.value)}
-          className={styles.input}
-          style={{ backgroundColor: "#E8F0FE" }}
+          className="bg-[#E8F0FE] block h-[40px] w-[100%] rounded-[3px] text-[14px] font-light "
         />
         {rePassword !== password && Accept && (
           <p style={{ fontSize: "15px", color: "red", marginLeft: "4px" }}>
@@ -114,7 +137,15 @@ export default function SignUp() {
           </p>
         )}
 
-        <button className={styles.button} type="submit">
+        <button
+          className="w-[100%] mt-[20px] bg-[#3361cc] text-[16px] font-semibold rounded-[5px] cursor-pointer"
+          style={{
+            color: "white",
+            marginTop: "20px",
+            padding: "12px 0",
+          }}
+          type="submit"
+        >
           Register
         </button>
 
