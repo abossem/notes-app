@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { Files, PanelRight, Settings, Trash2, Wifi } from "lucide-react";
 import { Pin, X, Search, Menu, SquarePen } from "lucide-react";
-import { getDeletedNotes, getNote, getNotes, updatePin } from "../../services/apiNote.js";
+import {
+  getDeletedNotes,
+  getNote,
+  getNotes,
+  updatePin,
+} from "../../services/apiNote.js";
 import CreateNote from "../CreateNote/CreateNote.jsx";
 
 const DisplayNote = ({ userId }) => {
@@ -22,16 +27,16 @@ const DisplayNote = ({ userId }) => {
   const handlePinClick = async (index, note) => {
     // Create a shallow copy of the note and toggle pin
     const updatedNote = { ...note, pin: !note.pin };
-  
+
     try {
       // Update in DB
       const savedNote = await updatePin(updatedNote);
-  
+
       // Update local state
       setNotes((prevNotes) => {
         const updatedNotes = [...prevNotes];
         updatedNotes.splice(index, 1); // remove current
-  
+
         if (savedNote.pin) {
           // put pinned notes at top
           return [savedNote, ...updatedNotes];
@@ -44,7 +49,7 @@ const DisplayNote = ({ userId }) => {
       setError(err.message);
     }
   };
-  
+
   const [notes, setNotes] = useState([]);
   const [error, setError] = useState(null);
 
@@ -57,9 +62,9 @@ const DisplayNote = ({ userId }) => {
         setError(err.message);
       }
     }
-    
+
     fetchNotes();
-  }, []);
+  }, [userId]);
   console.log(notes);
   const handleSearch = async (text) => {
     try {
@@ -71,7 +76,7 @@ const DisplayNote = ({ userId }) => {
       setError(err.message);
     }
   };
-  
+
   ///////////////////////////////////////
   const [activeIndex, setActiveIndex] = useState(0);
   const handleClick = (index) => {
@@ -155,7 +160,7 @@ const DisplayNote = ({ userId }) => {
             onClick={() => setOpen2(!open2)}
             onMouseUp={() => setOpen2(open2)}
           />
-          
+
           <p
             className={`font-semibold origin-left duration-200 ${
               !open && "scale-0"
@@ -187,7 +192,7 @@ const DisplayNote = ({ userId }) => {
             <X className="mr-2 cursor-pointer" onClick={() => clear()} />
           )}
         </div>
-        <ul className={`${!open && "hidden"}` }>
+        <ul className={`${!open && "hidden"}`}>
           {notes.map((note, index) => (
             <div
               className={`${!open && "hidden"}group origin-left duration-200`}
@@ -209,7 +214,7 @@ const DisplayNote = ({ userId }) => {
                     size={14}
                     strokeWidth={3}
                     color={note.pin ? "blue" : "gray"}
-                    onClick={() => handlePinClick(index,note)}
+                    onClick={() => handlePinClick(index, note)}
                   />
                 ) : (
                   <Pin
@@ -217,7 +222,7 @@ const DisplayNote = ({ userId }) => {
                     size={14}
                     strokeWidth={3}
                     color={note.pin ? "blue" : "gray"}
-                    onClick={() => handlePinClick(index,note)}
+                    onClick={() => handlePinClick(index, note)}
                   />
                 )}
                 <div className="flex flex-col pl-5 w-full">
@@ -248,7 +253,7 @@ const DisplayNote = ({ userId }) => {
           rotate-180 ml-2"
             onClick={() => setOpen(!open)}
           />
-          <CreateNote userId={userId}/>
+          <CreateNote userId={userId} />
         </div>
       </div>
     </div>
