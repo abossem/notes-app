@@ -10,7 +10,7 @@ const HeroSection = () => {
         </p>
         <div className="space-x-3 mb-5">
           <a
-            className="bg-[#5576FA] py-2.5 px-10 text-white rounded-[8px]"
+            className="bg-[#5576FA] py-2.5 px-10 text-white rounded-[9px]"
             href=""
           >
             Login
