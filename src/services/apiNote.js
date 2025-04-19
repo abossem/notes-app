@@ -7,11 +7,15 @@ import supabase from "./supabase";
 // -H "apikey: SUPABASE_KEY"
 // -H "Authorization: Bearer SUPABASE_KEY"
 
-export async function getNotes() {
-  const { data: notes, error } = await supabase.from("note").select("*");
+export async function getNotes(userId) {
+  const { data: notes, error } = await supabase
+    .from("note")
+    .select("*")
+    .eq("userId", userId)
+    .order("pin", { ascending: false }); // ⬅️ pinned notes will appear first
 
   if (error) {
-    throw new Error(error);
+    throw new Error(error.message); // optional: get readable error
   }
 
   return notes;
@@ -23,12 +27,26 @@ export async function getNotes() {
 // -H "apikey: SUPABASE_KEY" \
 // -H "Authorization: Bearer SUPABASE_KEY"
 
-export async function getNote(id) {
+// export async function getNote(id) {
+//   const { data: note, error } = await supabase
+//     .from("note")
+//     .select("*")
+//     .eq("id", id)
+//     .single();
+
+//   if (error) {
+//     toast.error("Could not load the note");
+
+//     throw new Error(error);
+//   }
+
+//   return note;
+// }
+export async function getNote(field,content) {
   const { data: note, error } = await supabase
     .from("note")
     .select("*")
-    .eq("id", id)
-    .single();
+    .eq(field, content);
 
   if (error) {
     toast.error("Could not load the note");
@@ -36,9 +54,9 @@ export async function getNote(id) {
     throw new Error(error);
   }
 
+
   return note;
 }
-
 // ADD NOTE
 
 // curl -X POST 'https://wajnfgvynztsmpfaypsf.supabase.co/rest/v1/note'
@@ -55,6 +73,7 @@ export async function addNote(note) {
       {
         title: note?.title,
         content: note?.content,
+        userId:note?.userId
       },
     ])
     .select();
@@ -111,4 +130,36 @@ export async function deleteNote(id) {
   }
 
   toast.success("Note deleted successfully");
+}
+//////////////////////////////////////////////////////////////////
+export async function getDeletedNotes(userId) {
+  const { data: notes, error } = await supabase.from("note").select("deleted")
+    .eq("userId", userId)
+  .eq("deleted",true)
+
+  if (error) {
+    throw new Error(error);
+  }
+
+  return notes;
+}
+
+export async function updatePin(note) {
+  console.log("DB",note);
+  
+  const { data, error } = await supabase
+    .from("note")
+    .update({
+      pin: note?.pin,
+    })
+    .eq("id", note?.id)
+    .select();
+
+  if (error) {
+    toast.error("Could not update note");
+    throw new Error(error);
+  }
+
+  toast.success("Note updated successfully");
+  return data[0];
 }
