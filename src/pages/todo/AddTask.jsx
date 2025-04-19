@@ -1,20 +1,29 @@
 import { X } from "lucide-react";
-import { useState } from "react";
+import { useOptimistic, useState } from "react";
 import { addTask } from "../../services/apiTask";
 import { useTaskContext } from "../../context/TaskContext";
 
 // LATER ADD OPTIMISTIC UPDATE FOR TASKS
 function AddTask() {
   const [task, setTask] = useState("");
-  const { setIsOpen } = useTaskContext();
+  const { setIsOpen, setUnCheckedTasks } = useTaskContext();
 
   async function handleSubmit(e) {
     e.preventDefault();
 
-    await addTask(task);
-    setIsOpen(false);
+    setUnCheckedTasks((prev) => [...prev, { task, status: false }]);
 
-    setTask("");
+    try {
+      console.log("BEFORE", task);
+      await addTask(task);
+      console.log("AFTER", task);
+
+      setIsOpen(false);
+
+      setTask("");
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
