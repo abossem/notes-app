@@ -8,11 +8,18 @@ import {
   FaListAlt,
   FaTrash,
 } from "react-icons/fa";
-import { addNote, updateNote } from "../../services/apiNote";
+import { addNote, deleteNote, updateNote } from "../../services/apiNote";
 import toast from "react-hot-toast";
 import DropdownMenu from "../DropdownMenu/DropdownMenu";
 
-const CreateNote = ({ userId }) => {
+const CreateNote = ({
+  userId,
+  add,
+  displayNote,
+  setNotesContent,
+  setNotes,
+  notesContent,
+}) => {
   const [openDropdown, setOpenDropdown] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [noteContent, setNoteContent] = useState("");
@@ -27,7 +34,22 @@ const CreateNote = ({ userId }) => {
   const handlePublish = () => console.log("Published");
   const handleInfo = () => setShowInfo(true);
   const handleInsertChecklist = () => toggleChecklistItem();
-  const handleMoveToTrash = () => console.log("Moved to Trash");
+  // const handleMoveToTrash = () => console.log("Moved to Trash", noteId);
+
+  const handleMoveToTrash = (id) => {
+    if (!id) return;
+
+    deleteNote(id);
+
+    setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
+
+    // Clear UI if the deleted note is currently displayed
+    if (displayNote?.id === id) {
+      setNoteContent("");
+      setNotesContent("");
+      setNoteId(null);
+    }
+  };
 
   useEffect(() => {
     if (!createdAt) {
@@ -133,7 +155,9 @@ const CreateNote = ({ userId }) => {
           onPublish={handlePublish}
           onInfo={handleInfo}
           onInsertChecklist={handleInsertChecklist}
-          onMoveToTrash={handleMoveToTrash}
+          onMoveToTrash={() => {
+            handleMoveToTrash(noteId);
+          }}
         />
       </div>
 
@@ -155,14 +179,47 @@ const CreateNote = ({ userId }) => {
       </button>
 
       {/* Textarea */}
-      <textarea
-        value={noteContent}
-        onChange={(e) => setNoteContent(e.target.value)}
-        placeholder="Write your note here..."
-        className="w-full h-60 p-4 rounded-md mt-4 focus:outline-none"
-      />
+      {add && (
+        <textarea
+          value={noteContent}
+          onChange={(e) => setNoteContent(e.target.value)}
+          placeholder="Write your note here..."
+          className="w-full h-60 p-4 rounded-md mt-4 focus:outline-none"
+        />
+      )}
+
+      {/* edit note  */}
+      {displayNote && (
+        <textarea
+          value={notesContent}
+          onChange={(e) => {
+            const newContent = e.target.value;
+
+            setNotesContent(newContent);
+            setNoteId(displayNote.id);
+
+            // Update note in backend
+            updateNote({
+              id: displayNote.id,
+              content: newContent,
+              title: "",
+            });
+
+            // Update notes list in sidebar
+            setNotes((prevNotes) =>
+              prevNotes.map((note) =>
+                note.id === displayNote.id
+                  ? { ...note, content: newContent }
+                  : note
+              )
+            );
+          }}
+          className="w-full h-60 p-4 rounded-md mt-4 focus:outline-none"
+        />
+      )}
 
       {/* Tags */}
+
       <div className="flex flex-wrap gap-2 mt-auto p-4 border-t border-gray-300">
         <input
           type="text"
@@ -215,4 +272,4 @@ const CreateNote = ({ userId }) => {
   );
 };
 
-export default CreateNote
+export default CreateNote;

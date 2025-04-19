@@ -27,26 +27,12 @@ export async function getNotes(userId) {
 // -H "apikey: SUPABASE_KEY" \
 // -H "Authorization: Bearer SUPABASE_KEY"
 
-// export async function getNote(id) {
-//   const { data: note, error } = await supabase
-//     .from("note")
-//     .select("*")
-//     .eq("id", id)
-//     .single();
-
-//   if (error) {
-//     toast.error("Could not load the note");
-
-//     throw new Error(error);
-//   }
-
-//   return note;
-// }
-export async function getNote(field,content) {
+export async function getNote(id) {
   const { data: note, error } = await supabase
     .from("note")
     .select("*")
-    .eq(field, content);
+    .eq("id", id)
+    .single();
 
   if (error) {
     toast.error("Could not load the note");
@@ -54,9 +40,23 @@ export async function getNote(field,content) {
     throw new Error(error);
   }
 
-
   return note;
 }
+// export async function getNote(field,content) {
+//   const { data: note, error } = await supabase
+//     .from("note")
+//     .select("*")
+//     .eq(field, content);
+
+//   if (error) {
+//     toast.error("Could not load the note");
+
+//     throw new Error(error);
+//   }
+
+
+//   return note;
+// }
 // ADD NOTE
 
 // curl -X POST 'https://wajnfgvynztsmpfaypsf.supabase.co/rest/v1/note'
