@@ -8,7 +8,7 @@ import {
   FaListAlt,
   FaTrash,
 } from "react-icons/fa";
-import { addNote, updateNote } from  "./../../../services/apiNote.js";
+import { addNote, updateNote } from "./../../../services/apiNote.js";
 import toast from "react-hot-toast";
 import DropdownMenu from "./../DropdownMenu/DropdownMenu.jsx";
 
@@ -138,7 +138,7 @@ const CreateNote = ({ userId }) => {
       </div>
 
       {/* Icons */}
-        {/*<button
+      {/*<button
         onClick={toggleInfo}
         className="absolute -right-160 -top-8 text-gray-700 hover:text-blue-500 p-2 rounded-full"
         title="Document Info"
@@ -154,33 +154,33 @@ const CreateNote = ({ userId }) => {
         <FaListAlt className="text-2xl" />
       </button> */}
 
-<div className="fixed top-17 right-4 flex flex-col mt-1 sm:flex-row items-center gap-4 z-50">
-  {/* Dropdown */}
-  <DropdownMenu
-    onMarkdownToggle={handleMarkdownToggle}
-    onPublish={handlePublish}
-    onInfo={handleInfo}
-    onInsertChecklist={handleInsertChecklist}
-    onMoveToTrash={handleMoveToTrash}
-  />
+      <div className="fixed top-17 right-4 flex flex-col mt-1 sm:flex-row items-center gap-4 z-50">
+        {/* Dropdown */}
+        <DropdownMenu
+          onMarkdownToggle={handleMarkdownToggle}
+          onPublish={handlePublish}
+          onInfo={handleInfo}
+          onInsertChecklist={handleInsertChecklist}
+          onMoveToTrash={handleMoveToTrash}
+        />
 
-  {/* Icons */}
-  <button
-    onClick={toggleInfo}
-    className="text-gray-700 hover:text-blue-500 p-2 rounded-full bg-white shadow"
-    title="Document Info"
-  >
-    <FaInfoCircle className="text-2xl" />
-  </button>
+        {/* Icons */}
+        <button
+          onClick={toggleInfo}
+          className="text-gray-700 hover:text-blue-500 p-2 rounded-full bg-white shadow"
+          title="Document Info"
+        >
+          <FaInfoCircle className="text-2xl" />
+        </button>
 
-  <button
-    className="text-gray-700 hover:text-green-500 p-2 rounded-full bg-white shadow"
-    title="Insert/Remove Checklist"
-    onClick={toggleChecklistItem}
-  >
-    <FaListAlt className="text-2xl" />
-  </button>
-</div>
+        <button
+          className="text-gray-700 hover:text-green-500 p-2 rounded-full bg-white shadow"
+          title="Insert/Remove Checklist"
+          onClick={toggleChecklistItem}
+        >
+          <FaListAlt className="text-2xl" />
+        </button>
+      </div>
 
       {/* Textarea */}
       <textarea
@@ -243,4 +243,4 @@ const CreateNote = ({ userId }) => {
   );
 };
 
-export default CreateNote
+export default CreateNote;
