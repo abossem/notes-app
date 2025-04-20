@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from "react";
+import { FaInfoCircle, FaListAlt, FaTrash } from "react-icons/fa";
 import {
-  FaEllipsisH,
-  FaMarkdown,
-  FaUpload,
-  FaThumbtack,
-  FaInfoCircle,
-  FaListAlt,
-  FaTrash,
-} from "react-icons/fa";
-import { addNote, updateNote } from "./../../../services/apiNote.js";
+  addNote,
+  deleteNote,
+  updateNote,
+} from "./../../../services/apiNote.js";
 import toast from "react-hot-toast";
 import DropdownMenu from "./../DropdownMenu/DropdownMenu.jsx";
 
-const CreateNote = ({ userId }) => {
-  // const [openDropdown, setOpenDropdown] = useState(false);
+const CreateNote = ({
+  userId,
+  add,
+  displayNote,
+  setNotesContent,
+  setNotes,
+  notesContent,
+}) => {
+  const [openDropdown, setOpenDropdown] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [noteContent, setNoteContent] = useState("");
   const [createdAt, setCreatedAt] = useState(null);
@@ -27,7 +30,19 @@ const CreateNote = ({ userId }) => {
   const handlePublish = () => console.log("Published");
   const handleInfo = () => setShowInfo(true);
   const handleInsertChecklist = () => toggleChecklistItem();
-  const handleMoveToTrash = () => console.log("Moved to Trash");
+
+  const handleMoveToTrash = (id) => {
+    if (!id) return;
+
+    deleteNote(id);
+    setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
+
+    if (displayNote?.id === id) {
+      setNoteContent("");
+      setNotesContent("");
+      setNoteId(null);
+    }
+  };
 
   useEffect(() => {
     if (!createdAt) {
@@ -36,18 +51,13 @@ const CreateNote = ({ userId }) => {
       setModifiedAt(now);
     }
   }, [createdAt]);
+
   useEffect(() => {
     if (noteContent !== "") {
       setModifiedAt(new Date());
 
       const words = noteContent.trim().split(/\s+/).slice(0, 4).join(" ");
       setTitle(words || "Untitled");
-    }
-  }, [noteContent]);
-
-  useEffect(() => {
-    if (noteContent !== "") {
-      setModifiedAt(new Date());
     }
   }, [noteContent]);
 
@@ -66,7 +76,6 @@ const CreateNote = ({ userId }) => {
       return () => clearTimeout(timeout);
     }
   }, [noteContent, tags, title]);
-  // console.log(title);
 
   const saveNote = async (noteData) => {
     try {
@@ -126,45 +135,16 @@ const CreateNote = ({ userId }) => {
 
   return (
     <div className="relative flex flex-col h-screen">
-      {/* Dropdown */}
-      {/* <div className="absolute -right-170 -top-6.5 ">
-        <DropdownMenu
-          onMarkdownToggle={handleMarkdownToggle}
-          onPublish={handlePublish}
-          onInfo={handleInfo}
-          onInsertChecklist={handleInsertChecklist}
-          onMoveToTrash={handleMoveToTrash}
-        />
-      </div>
-
-      {/* Icons */}
-      {/*<button
-        onClick={toggleInfo}
-        className="absolute -right-160 -top-8 text-gray-700 hover:text-blue-500 p-2 rounded-full"
-        title="Document Info"
-      >
-        <FaInfoCircle className="text-2xl" />
-      </button>
-
-      <button
-        className="absolute -right-148 -top-8 text-gray-700 hover:text-green-500 p-2 rounded-full"
-        title="Insert/Remove Checklist"
-        onClick={toggleChecklistItem}
-      >
-        <FaListAlt className="text-2xl" />
-      </button> */}
-
+      {/* Icons & Dropdown */}
       <div className="fixed top-17 right-4 flex flex-col mt-1 sm:flex-row items-center gap-4 z-50">
-        {/* Dropdown */}
         <DropdownMenu
           onMarkdownToggle={handleMarkdownToggle}
           onPublish={handlePublish}
           onInfo={handleInfo}
           onInsertChecklist={handleInsertChecklist}
-          onMoveToTrash={handleMoveToTrash}
+          onMoveToTrash={() => handleMoveToTrash(noteId)}
         />
 
-        {/* Icons */}
         <button
           onClick={toggleInfo}
           className="text-gray-700 hover:text-blue-500 p-2 rounded-full bg-white shadow"
@@ -182,13 +162,41 @@ const CreateNote = ({ userId }) => {
         </button>
       </div>
 
-      {/* Textarea */}
-      <textarea
-        value={noteContent}
-        onChange={(e) => setNoteContent(e.target.value)}
-        placeholder="Write your note here..."
-        className="w-full h-60 p-4 rounded-md mt-4 focus:outline-none"
-      />
+      {/* Note Textarea */}
+      {add && (
+        <textarea
+          value={noteContent}
+          onChange={(e) => setNoteContent(e.target.value)}
+          placeholder="Write your note here..."
+          className="w-full h-60 p-4 rounded-md mt-4 focus:outline-none"
+        />
+      )}
+
+      {displayNote && (
+        <textarea
+          value={notesContent}
+          onChange={(e) => {
+            const newContent = e.target.value;
+            setNotesContent(newContent);
+            setNoteId(displayNote.id);
+
+            updateNote({
+              id: displayNote.id,
+              content: newContent,
+              title: "",
+            });
+
+            setNotes((prevNotes) =>
+              prevNotes.map((note) =>
+                note.id === displayNote.id
+                  ? { ...note, content: newContent }
+                  : note
+              )
+            );
+          }}
+          className="w-full h-60 p-4 rounded-md mt-4 focus:outline-none"
+        />
+      )}
 
       {/* Tags */}
       <div className="flex flex-wrap gap-2 mt-auto p-4 border-t border-gray-300">

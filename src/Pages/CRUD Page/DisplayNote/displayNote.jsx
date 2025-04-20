@@ -24,6 +24,19 @@ const DisplayNote = () => {
 
   const navigate = useNavigate();
 
+  const [add, setAdd] = useState(false);
+  const [displayNote, setDisplayNote] = useState("");
+  const [noteContent, setNoteContent] = useState("");
+  async function getNoteFunction(id) {
+    try {
+      const data = await getNote(id);
+      setDisplayNote(data);
+      setAdd(false);
+    } catch (err) {
+      console.log(err.message);
+    }
+  }
+
   async function clear() {
     setSearchText("");
     try {
@@ -74,7 +87,10 @@ const DisplayNote = () => {
     }
 
     fetchNotes();
-  }, [userId]);
+    if (displayNote) {
+      setNoteContent(displayNote.content);
+    }
+  }, [userId, displayNote]);
   console.log(notes);
   const handleSearch = async (text) => {
     try {
@@ -302,6 +318,9 @@ const DisplayNote = () => {
               <div
                 className={`${!open && "hidden"}group origin-left duration-200`}
                 key={index}
+                onClick={() => {
+                  getNoteFunction(note.id);
+                }}
               >
                 <li
                   onClick={() => handleClick(index)}
@@ -349,7 +368,13 @@ const DisplayNote = () => {
             ""
           ) : (
             <div className="border-r border-indigo-200 w-8 h-12 -mt-3">
-              <SquarePen className="cursor-pointer mt-3" />
+              <SquarePen
+                className="cursor-pointer mt-3"
+                onClick={() => {
+                  setAdd(true);
+                  setDisplayNote(false);
+                }}
+              />
             </div>
           )}
           <div>
@@ -366,7 +391,14 @@ const DisplayNote = () => {
                 <img src={createNoteImage} className="h-131 mt-3.5 ml-32" />
               </div>
             ) : (
-              <CreateNote userId={userId} />
+              <CreateNote
+                userId={userId}
+                notesContent={noteContent}
+                displayNote={displayNote}
+                setNotesContent={setNoteContent}
+                setNotes={setNotes}
+                add={add}
+              />
             )}
           </div>
         </div>
