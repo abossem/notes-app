@@ -48,9 +48,6 @@ export default function AboutUsPage() {
           <div className="flex justify-center">
             <CardsAbout name="Dina Reda" src={Dina} />
           </div>
-          <div className="flex justify-center">
-            <CardsAbout name="Abdelrahman Assem" src={Abdo} />
-          </div>
 
           <div className="flex justify-center">
             <CardsAbout name="Mohamed Elfar" src={Mohamed} />
