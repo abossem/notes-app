@@ -87,7 +87,7 @@ const CreateNote = ({
 
       return () => clearTimeout(timeout);
     }
-  }, [noteContent, tags, title]);
+  }, [noteContent, tags, title, noteId, userId]);
   // console.log(title);
 
   const saveNote = async (noteData) => {
