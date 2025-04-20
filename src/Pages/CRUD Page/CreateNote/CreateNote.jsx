@@ -31,11 +31,15 @@ const CreateNote = ({
   const handleInfo = () => setShowInfo(true);
   const handleInsertChecklist = () => toggleChecklistItem();
 
-  const handleMoveToTrash = (id) => {
+  const handleMoveToTrash = async (id) => {
     if (!id) return;
 
-    deleteNote(id);
     setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
+    await deleteNote(id);
+
+    console.log("DELETE");
+
+    toast.success("The Note has been successfully deleted");
 
     if (displayNote?.id === id) {
       setNoteContent("");

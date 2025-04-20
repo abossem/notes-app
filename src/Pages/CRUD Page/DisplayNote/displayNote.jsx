@@ -26,7 +26,7 @@ const DisplayNote = () => {
   const navigate = useNavigate();
 
   const [add, setAdd] = useState(false);
-  const [displayNote, setDisplayNote] = useState("");
+  const [displayNote, setDisplayNote] = useState(null);
   const [noteContent, setNoteContent] = useState("");
   async function getNoteFunction(id) {
     try {
@@ -297,7 +297,7 @@ const DisplayNote = () => {
           </ul>
         </div>
 
-        <div className="h-[49px] flex p-3 border-b border-indigo-200 w-full">
+        <div className="h-[49px]   flex p-3 border-b border-indigo-200 w-full">
           {open ? (
             ""
           ) : (
@@ -314,13 +314,11 @@ const DisplayNote = () => {
           <div>
             <PanelRight
               className="cursor-pointer  w-7 
-          rotate-180 ml-2"
+          rotate-180 ml-2 "
               onClick={() => setOpen(!open)}
             />
-            {/* {isClicked ? <img src={createNoteImage} className="h-131 mt-3.5 ml-32" />:<CreateNote userId={userId} />}
-             */}
 
-            {isClicked ? (
+            {isClicked && !displayNote && notes.length === 0 ? (
               <div className="hidden lg:block">
                 <img src={createNoteImage} className="h-131 mt-3.5 ml-32" />
               </div>
