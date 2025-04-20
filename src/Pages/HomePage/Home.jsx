@@ -148,8 +148,7 @@ export default function Home() {
           Made with <span className="text-red-500">❤</span> by:
         </p>
         <p className="mt-1 text-xs font-medium">
-          Abdelrahmen Assem, Mohamed Samir, Hassna Nageh, Dina Reda, Batool
-          Elgohary, Ahmed Adel
+          Mohamed Samir, Hassna Nageh, Dina Reda, Batool Elgohary, Ahmed Adel
         </p>
       </footer>
     </div>
