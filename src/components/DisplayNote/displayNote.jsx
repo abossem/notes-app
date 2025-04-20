@@ -13,6 +13,7 @@ const DisplayNote = ({ userId }) => {
   const [open, setOpen] = useState(true);
   const [open2, setOpen2] = useState(true);
   const [searchText, setSearchText] = useState("");
+  const [add, setAdd] = useState(false);
   async function clear() {
     setSearchText("");
     try {
@@ -23,6 +24,18 @@ const DisplayNote = ({ userId }) => {
     }
   }
 
+  // edit function
+  const [displayNote, setDisplayNote] = useState("");
+  const [noteContent, setNoteContent] = useState("");
+  async function getNoteFunction(id) {
+    try {
+      const data = await getNote(id);
+      setDisplayNote(data);
+      setAdd(false);
+    } catch (err) {
+      console.log(err.message);
+    }
+  }
   ///////////////////////////////////////
   const handlePinClick = async (index, note) => {
     // Create a shallow copy of the note and toggle pin
@@ -64,11 +77,15 @@ const DisplayNote = ({ userId }) => {
     }
 
     fetchNotes();
-  }, [userId]);
-  console.log(notes);
+
+    if (displayNote) {
+      setNoteContent(displayNote.content);
+    }
+  }, [userId, displayNote]);
+  // console.log(notes);
   const handleSearch = async (text) => {
     try {
-      console.log(text);
+      // console.log(text);
 
       const data = await getNote("title", text);
       setNotes(data);
@@ -81,7 +98,7 @@ const DisplayNote = ({ userId }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const handleClick = (index) => {
     setActiveIndex(index);
-    console.log("Clicked index:", index);
+    // console.log("Clicked index:", index);
   };
   /////////////////////////////////
   const [activeIndexSidebar, setActiveIndexSidebar] = useState(0);
@@ -115,7 +132,7 @@ const DisplayNote = ({ userId }) => {
       }
       fetchNotes();
     }
-    console.log("Clicked index in Sidebar:", index);
+    // console.log("Clicked index in Sidebar:", index);
   };
   return (
     <div className="flex ">
@@ -168,7 +185,13 @@ const DisplayNote = ({ userId }) => {
           >
             All Notes
           </p>
-          <SquarePen className="cursor-pointer" />
+          <SquarePen
+            className="cursor-pointer"
+            onClick={() => {
+              setAdd(true);
+              setDisplayNote(false);
+            }}
+          />
         </div>
         <div
           className={`${
@@ -197,6 +220,9 @@ const DisplayNote = ({ userId }) => {
             <div
               className={`${!open && "hidden"}group origin-left duration-200`}
               key={index}
+              onClick={() => {
+                getNoteFunction(note.id);
+              }}
             >
               <li
                 onClick={() => handleClick(index)}
@@ -253,7 +279,15 @@ const DisplayNote = ({ userId }) => {
           rotate-180 ml-2"
             onClick={() => setOpen(!open)}
           />
-          <CreateNote userId={userId} />
+
+          <CreateNote
+            userId={userId}
+            notesContent={noteContent}
+            displayNote={displayNote}
+            setNotesContent={setNoteContent}
+            setNotes={setNotes}
+            add={add}
+          />
         </div>
       </div>
     </div>
