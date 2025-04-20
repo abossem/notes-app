@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { signup } from "./../../services/apiAuth";
 import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { Loader2 } from "lucide-react";
 
 export default function SignUp() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
   const [Accept, setAccept] = useState(false);
@@ -13,20 +16,28 @@ export default function SignUp() {
   async function SubmitFun(e) {
     e.preventDefault();
     setAccept(true);
-    
+
     const isValid =
       name.trim().length > 0 && password.length >= 8 && password === rePassword;
 
     if (!isValid) return;
 
     try {
-      let res = await signup({ name, email, password });
-      console.log("Signup successful", res);
+      setIsLoading(true);
+
+      const res = await signup({ name, email, password });
+
       window.localStorage.setItem("name", name);
       window.localStorage.setItem("email", email);
+
+      toast.success("Signup successful");
+
       navigate("/DisplayNote", { state: { userId: res.user.id } });
     } catch (err) {
       console.error("Signup error", err);
+      toast.error("Signup failed");
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -150,7 +161,13 @@ export default function SignUp() {
           }}
           type="submit"
         >
-          Register
+          {isLoading ? (
+            <div className="flex justify-center items-center">
+              <Loader2 className="text-white animate-spin" />
+            </div>
+          ) : (
+            "Register"
+          )}
         </button>
 
         <div

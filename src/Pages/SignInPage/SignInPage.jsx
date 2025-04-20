@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { login } from "./../../services/apiAuth";
 import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { Loader2 } from "lucide-react";
 
 export default function SignInPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [password, setPassword] = useState("");
   const [accept, setAccept] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -20,15 +23,21 @@ export default function SignInPage() {
     if (!isValid) return;
 
     try {
+      setIsLoading(true);
+
       const res = await login({ name, email, password });
-      console.log("SignIn successful", res);
+
       window.localStorage.setItem("name", name);
       window.localStorage.setItem("email", email);
+
+      toast.success("Logged in successfully");
 
       navigate("/DisplayNote", { state: { userId: res.user.id } });
     } catch (err) {
       console.error("SignIn error", err);
       setErrorMessage("Incorrect email or password");
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -126,7 +135,13 @@ export default function SignInPage() {
           }}
           type="submit"
         >
-          Log In
+          {isLoading ? (
+            <div className="flex justify-center items-center">
+              <Loader2 className="animate-spin text-white " />
+            </div>
+          ) : (
+            "Log In"
+          )}
         </button>
         <div className="flex justify-between" style={{ marginTop: "12px" }}>
           <p>Don't have an Account</p>

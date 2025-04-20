@@ -10,7 +10,7 @@ import {
   updatePin,
 } from "./../../../services/apiNote.js";
 import CreateNote from "../CreateNote/CreateNote.jsx";
-import createNoteImage from "./../../../assets/images/card.jpg"
+import createNoteImage from "./../../../assets/images/card.jpg";
 const DisplayNote = () => {
   const [open, setOpen] = useState(true);
   const [open2, setOpen2] = useState(true);
@@ -18,11 +18,9 @@ const DisplayNote = () => {
   const [error, setError] = useState(null);
   const [name, setName] = useState("");
   const [isClicked, setIsClicked] = useState(true);
-  
 
-   const location = useLocation();
+  const location = useLocation();
   const { userId } = location.state || {};
-
 
   const navigate = useNavigate();
 
@@ -76,7 +74,7 @@ const DisplayNote = () => {
     }
 
     fetchNotes();
-  }, []);
+  }, [userId]);
   console.log(notes);
   const handleSearch = async (text) => {
     try {
@@ -143,7 +141,6 @@ const DisplayNote = () => {
     setName(storedName || "");
   }, []);
 
- 
   return (
     <>
       <div>
@@ -271,7 +268,12 @@ const DisplayNote = () => {
             >
               All Notes
             </p>
-            <SquarePen className="cursor-pointer" onClick={()=>{setIsClicked(!isClicked)}} />
+            <SquarePen
+              className="cursor-pointer"
+              onClick={() => {
+                setIsClicked(!isClicked);
+              }}
+            />
           </div>
           <div
             className={`${
@@ -358,15 +360,14 @@ const DisplayNote = () => {
             />
             {/* {isClicked ? <img src={createNoteImage} className="h-131 mt-3.5 ml-32" />:<CreateNote userId={userId} />}
              */}
-           
-            {isClicked ? (
-               <div className="hidden lg:block">
-                <img src={createNoteImage} className="h-131 mt-3.5 ml-32" />
-                </div>
-  ) : (
-    <CreateNote userId={userId} />
-  )}
 
+            {isClicked ? (
+              <div className="hidden lg:block">
+                <img src={createNoteImage} className="h-131 mt-3.5 ml-32" />
+              </div>
+            ) : (
+              <CreateNote userId={userId} />
+            )}
           </div>
         </div>
       </div>
