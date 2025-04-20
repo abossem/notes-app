@@ -8,9 +8,10 @@ import {
   getNote,
   getNotes,
   updatePin,
-} from "./../../../services/apiNote.js";
+} from "../../../services/apiNote.js";
 import CreateNote from "../CreateNote/CreateNote.jsx";
 import createNoteImage from "./../../../assets/images/card.jpg";
+import Header from "./Header.jsx";
 const DisplayNote = () => {
   const [open, setOpen] = useState(true);
   const [open2, setOpen2] = useState(true);
@@ -30,7 +31,9 @@ const DisplayNote = () => {
   async function getNoteFunction(id) {
     try {
       const data = await getNote(id);
+
       setDisplayNote(data);
+      console.log("DATAAAAA.....AFTER", displayNote);
       setAdd(false);
     } catch (err) {
       console.log(err.message);
@@ -80,6 +83,7 @@ const DisplayNote = () => {
     async function fetchNotes() {
       try {
         const data = await getNotes(userId);
+        // console.log("🧑‍💻USER NOTES....", data);
         setNotes(data);
       } catch (err) {
         setError(err.message);
@@ -91,10 +95,10 @@ const DisplayNote = () => {
       setNoteContent(displayNote.content);
     }
   }, [userId, displayNote]);
-  console.log(notes);
+  // console.log(notes);
   const handleSearch = async (text) => {
     try {
-      console.log(text);
+      // console.log(text);
 
       const data = await getNote("title", text);
       setNotes(data);
@@ -107,7 +111,7 @@ const DisplayNote = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const handleClick = (index) => {
     setActiveIndex(index);
-    console.log("Clicked index:", index);
+    // console.log("Clicked index:", index);
   };
   /////////////////////////////////
   const [activeIndexSidebar, setActiveIndexSidebar] = useState(0);
@@ -141,16 +145,10 @@ const DisplayNote = () => {
       }
       fetchNotes();
     }
-    console.log("Clicked index in Sidebar:", index);
+    // console.log("Clicked index in Sidebar:", index);
   };
 
   // Logout
-  const isLoggedIn = !!window.localStorage.getItem("email");
-
-  function HandleLogOut() {
-    window.localStorage.removeItem("email");
-    navigate("/SignIn");
-  }
 
   useEffect(() => {
     const storedName = window.localStorage.getItem("name");
@@ -160,88 +158,16 @@ const DisplayNote = () => {
   return (
     <>
       <div>
-        {" "}
-        {/* {isLoggedIn ? (
-          
-          <div className="ml-4">
-            <button
-              className="w-[100%] mt-[20px] bg-red-500 text-[16px] font-semibold rounded-[5px] cursor-pointer"
-              style={{
-                color: "white",
-                marginTop: "20px",
-                padding: "12px 0",
-              }}
-              onClick={HandleLogOut}
-            >
-              Log out
-            </button>
-          </div>
-        ) : (
-          <div className="flex space-x-2 ml-4">
-            <Link
-              to="/SignIn"
-              className="w-[100%] mt-[20px] bg-[#3361cc] text-[16px] font-semibold rounded-[5px] cursor-pointer"
-              style={{
-                color: "white",
-                marginTop: "20px",
-                padding: "12px 0",
-              }}
-            >
-              SignIn
-            </Link>
-            <Link
-              to="/SignUp"
-              className="w-[100%] mt-[20px] bg-[#F25D26] text-[16px] font-semibold rounded-[5px] cursor-pointer"
-              style={{
-                color: "white",
-                marginTop: "20px",
-                padding: "12px 0",
-              }}
-            >
-              SignUp
-            </Link>
-          </div>
-        )} */}
-        <div className="flex items-center justify-between px-4 mt-4">
-          {isLoggedIn && (
-            <span className="text-xl font-medium text-[#2C3338]">
-              Hello <span className="text-[#3361cc] font-semibold">{name}</span>
-            </span>
-          )}
-
-          {isLoggedIn ? (
-            <button
-              className="bg-red-500 text-[16px] font-semibold rounded-[5px] cursor-pointer px-6 py-3 text-white"
-              onClick={HandleLogOut}
-            >
-              Log out
-            </button>
-          ) : (
-            <div className="flex space-x-2">
-              <Link
-                to="/SignIn"
-                className="bg-[#3361cc] text-[16px] font-semibold rounded-[5px] cursor-pointer px-6 py-3 text-white"
-              >
-                SignIn
-              </Link>
-              <Link
-                to="/SignUp"
-                className="bg-[#F25D26] text-[16px] font-semibold rounded-[5px] cursor-pointer px-6 py-3 text-white"
-              >
-                SignUp
-              </Link>
-            </div>
-          )}
-        </div>
-        <h1></h1>
+        <Header name={name} />
       </div>
-      <div className="flex ">
+
+      <div className="flex">
         <div
           className={` ${
             open2 ? "hidden" : "block "
           } bg-white border w-60 border-indigo-200 h-screen absolute duration-300 z-40 text-gray-800 `}
         >
-          <X className="mr-2 cursor-pointer" onClick={() => setOpen2(!open2)} />
+          <X className="cursor-pointer m-2" onClick={() => setOpen2(!open2)} />
           {menuItems.map((item, index) => (
             <div
               key={index}
@@ -266,11 +192,13 @@ const DisplayNote = () => {
             <p>Help & Support About</p>
           </div>
         </div>
+
         <div
           className={` ${
             open ? "w-130" : "w-0 "
           } bg-white border-r border-indigo-200 h-fit relative duration-300`}
         >
+          {/* ADD CREATE NOTE HERE */}
           <div className="flex gap-x-4 items-center justify-between p-3 ">
             <Menu
               className="cursor-pointer"
@@ -284,6 +212,9 @@ const DisplayNote = () => {
             >
               All Notes
             </p>
+
+            {/* here where the create note should be */}
+
             <SquarePen
               className="cursor-pointer"
               onClick={() => {
@@ -291,6 +222,8 @@ const DisplayNote = () => {
               }}
             />
           </div>
+
+          {/* SEARCH */}
           <div
             className={`${
               !open && "hidden"
@@ -313,6 +246,7 @@ const DisplayNote = () => {
               <X className="mr-2 cursor-pointer" onClick={() => clear()} />
             )}
           </div>
+
           <ul className={`${!open && "hidden"}`}>
             {notes.map((note, index) => (
               <div
