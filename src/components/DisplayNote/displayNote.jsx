@@ -85,7 +85,7 @@ const DisplayNote = ({ userId }) => {
   // console.log(notes);
   const handleSearch = async (text) => {
     try {
-      // console.log(text);
+      console.log(text);
 
       const data = await getNote("title", text);
       setNotes(data);
@@ -98,7 +98,7 @@ const DisplayNote = ({ userId }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const handleClick = (index) => {
     setActiveIndex(index);
-    // console.log("Clicked index:", index);
+    console.log("Clicked index:", index);
   };
   /////////////////////////////////
   const [activeIndexSidebar, setActiveIndexSidebar] = useState(0);

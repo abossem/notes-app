@@ -20,7 +20,7 @@ const CreateNote = ({
   setNotes,
   notesContent,
 }) => {
-  const [openDropdown, setOpenDropdown] = useState(false);
+  // const [openDropdown, setOpenDropdown] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [noteContent, setNoteContent] = useState("");
   const [createdAt, setCreatedAt] = useState(null);
