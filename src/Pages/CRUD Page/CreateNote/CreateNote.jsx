@@ -8,11 +8,22 @@ import {
   FaListAlt,
   FaTrash,
 } from "react-icons/fa";
-import { addNote, updateNote } from "./../../../services/apiNote.js";
+import {
+  addNote,
+  deleteNote,
+  updateNote,
+} from "./../../../services/apiNote.js";
 import toast from "react-hot-toast";
 import DropdownMenu from "./../DropdownMenu/DropdownMenu.jsx";
 
-const CreateNote = ({ userId, setNoteId, noteId }) => {
+const CreateNote = ({
+  userId,
+  setNoteId,
+  noteId,
+  setNotesContent,
+  displayNote,
+  setNotes,
+}) => {
   // const [openDropdown, setOpenDropdown] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [noteContent, setNoteContent] = useState("");
@@ -26,7 +37,21 @@ const CreateNote = ({ userId, setNoteId, noteId }) => {
   const handlePublish = () => console.log("Published");
   const handleInfo = () => setShowInfo(true);
   const handleInsertChecklist = () => toggleChecklistItem();
-  const handleMoveToTrash = () => console.log("Moved to Trash");
+  // const handleMoveToTrash = () => console.log("Moved to Trash");
+  const handleMoveToTrash = (id) => {
+    if (!id) return;
+
+    deleteNote(id);
+
+    setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
+
+    // Clear UI if the deleted note is currently displayed
+    if (displayNote?.id === id) {
+      setNoteContent("");
+      setNotesContent("");
+      setNoteId(null);
+    }
+  };
 
   useEffect(() => {
     if (!createdAt) {
@@ -160,7 +185,7 @@ const CreateNote = ({ userId, setNoteId, noteId }) => {
           onPublish={handlePublish}
           onInfo={handleInfo}
           onInsertChecklist={handleInsertChecklist}
-          onMoveToTrash={handleMoveToTrash}
+          onMoveToTrash={handleMoveToTrash(noteId)}
         />
 
         {/* Icons */}

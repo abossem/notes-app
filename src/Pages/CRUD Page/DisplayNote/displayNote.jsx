@@ -381,36 +381,7 @@ const DisplayNote = () => {
             {/* {isClicked ? <img src={createNoteImage} className="h-131 mt-3.5 ml-32" />:<CreateNote userId={userId} />}
              */}
 
-            {/* {displayNote && (
-              <textarea
-                value={noteContent}
-                onChange={(e) => {
-                  const newContent = e.target.value;
-
-                  setNoteContent(newContent);
-                  setNoteId(displayNote.id);
-
-                  // Update note in backend
-                  updateNote({
-                    id: displayNote.id,
-                    content: newContent,
-                    title: "",
-                  });
-
-                  // Update notes list in sidebar
-                  setNotes((prevNotes) =>
-                    prevNotes.map((note) =>
-                      note.id === displayNote.id
-                        ? { ...note, content: newContent }
-                        : note
-                    )
-                  );
-                }}
-                className="w-full h-60 p-4 rounded-md mt-4 focus:outline-none"
-              />
-            )}
-
-            {isClicked ? (
+            {/* {isClicked ? (
               <div className="hidden lg:block">
                 <img src={createNoteImage} className="h-131 mt-3.5 ml-32" />
               </div>
@@ -423,7 +394,7 @@ const DisplayNote = () => {
             )} */}
 
             {
-              /* 1️⃣ — A note is selected → show the editor */
+              /*  show the editor */
               displayNote ? (
                 <textarea
                   value={noteContent}
@@ -432,7 +403,7 @@ const DisplayNote = () => {
                     setNoteContent(newContent);
                     setNoteId(displayNote.id);
 
-                    // ─── persist in DB ───────────────────────
+                    // ─── update in DB ───────────────────────
                     updateNote({
                       id: displayNote.id,
                       content: newContent,
@@ -450,15 +421,18 @@ const DisplayNote = () => {
                   }}
                   className="w-full h-60 p-4 rounded-md mt-4 focus:outline-none"
                 />
-              ) : /* 2️⃣ — “Create new” button was pressed → show CreateNote */
-              !isClicked ? (
+              ) : /* show CreateNote */
+              isClicked ? (
                 <CreateNote
                   userId={userId}
                   noteId={noteId}
                   setNoteId={setNoteId}
+                  setNotesContent={setNoteContent}
+                  displayNote={displayNote}
+                  setNotes={setNotes}
                 />
               ) : (
-                /* 3️⃣ — Default (no note selected, not creating) → show the image */
+                /*  Default show the image */
                 <div className="hidden lg:block">
                   <img src={createNoteImage} className="h-131 mt-3.5 ml-32" />
                 </div>
