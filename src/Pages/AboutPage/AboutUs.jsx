@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import Dina from "./../../assets/images/Dina.jpg";
 import Hasnaa from "./../../assets/images/Hasnaa.jpg";
-import Abdo from "./../../assets/images/Abdelrahman.jpg";
+// import Abdo from "./../../assets/images/Abdelrahman.jpg";
 import Mohamed from "./../../assets/images/Mohamed.jpg";
 export default function AboutUsPage() {
   return (

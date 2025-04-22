@@ -7,22 +7,22 @@ import {
   getDeletedNotes,
   getNote,
   getNotes,
+  updateNote,
   updatePin,
 } from "./../../../services/apiNote.js";
 import CreateNote from "../CreateNote/CreateNote.jsx";
-import createNoteImage from "./../../../assets/images/card.jpg"
+import createNoteImage from "./../../../assets/images/card.jpg";
 const DisplayNote = () => {
   const [open, setOpen] = useState(true);
   const [open2, setOpen2] = useState(true);
   const [searchText, setSearchText] = useState("");
   const [error, setError] = useState(null);
   const [name, setName] = useState("");
+  const [noteId, setNoteId] = useState(null);
   const [isClicked, setIsClicked] = useState(true);
-  
 
-   const location = useLocation();
+  const location = useLocation();
   const { userId } = location.state || {};
-
 
   const navigate = useNavigate();
 
@@ -33,6 +33,18 @@ const DisplayNote = () => {
       setNotes(data);
     } catch (err) {
       setError(err.message);
+    }
+  }
+
+  // edit function
+  const [displayNote, setDisplayNote] = useState("");
+  const [noteContent, setNoteContent] = useState("");
+  async function getNoteFunction(id) {
+    try {
+      const data = await getNote(id);
+      setDisplayNote(data);
+    } catch (err) {
+      console.log(err.message);
     }
   }
 
@@ -76,7 +88,10 @@ const DisplayNote = () => {
     }
 
     fetchNotes();
-  }, []);
+    if (displayNote) {
+      setNoteContent(displayNote.content);
+    }
+  }, [displayNote]);
   console.log(notes);
   const handleSearch = async (text) => {
     try {
@@ -143,7 +158,6 @@ const DisplayNote = () => {
     setName(storedName || "");
   }, []);
 
- 
   return (
     <>
       <div>
@@ -271,7 +285,12 @@ const DisplayNote = () => {
             >
               All Notes
             </p>
-            <SquarePen className="cursor-pointer" onClick={()=>{setIsClicked(!isClicked)}} />
+            <SquarePen
+              className="cursor-pointer"
+              onClick={() => {
+                setIsClicked(!isClicked);
+              }}
+            />
           </div>
           <div
             className={`${
@@ -300,6 +319,9 @@ const DisplayNote = () => {
               <div
                 className={`${!open && "hidden"}group origin-left duration-200`}
                 key={index}
+                onClick={() => {
+                  getNoteFunction(note.id);
+                }}
               >
                 <li
                   onClick={() => handleClick(index)}
@@ -358,15 +380,90 @@ const DisplayNote = () => {
             />
             {/* {isClicked ? <img src={createNoteImage} className="h-131 mt-3.5 ml-32" />:<CreateNote userId={userId} />}
              */}
-           
-            {isClicked ? (
-               <div className="hidden lg:block">
-                <img src={createNoteImage} className="h-131 mt-3.5 ml-32" />
-                </div>
-  ) : (
-    <CreateNote userId={userId} />
-  )}
 
+            {/* {displayNote && (
+              <textarea
+                value={noteContent}
+                onChange={(e) => {
+                  const newContent = e.target.value;
+
+                  setNoteContent(newContent);
+                  setNoteId(displayNote.id);
+
+                  // Update note in backend
+                  updateNote({
+                    id: displayNote.id,
+                    content: newContent,
+                    title: "",
+                  });
+
+                  // Update notes list in sidebar
+                  setNotes((prevNotes) =>
+                    prevNotes.map((note) =>
+                      note.id === displayNote.id
+                        ? { ...note, content: newContent }
+                        : note
+                    )
+                  );
+                }}
+                className="w-full h-60 p-4 rounded-md mt-4 focus:outline-none"
+              />
+            )}
+
+            {isClicked ? (
+              <div className="hidden lg:block">
+                <img src={createNoteImage} className="h-131 mt-3.5 ml-32" />
+              </div>
+            ) : (
+              <CreateNote
+                userId={userId}
+                noteId={noteId}
+                setNoteId={setNoteId}
+              />
+            )} */}
+
+            {
+              /* 1️⃣ — A note is selected → show the editor */
+              displayNote ? (
+                <textarea
+                  value={noteContent}
+                  onChange={(e) => {
+                    const newContent = e.target.value;
+                    setNoteContent(newContent);
+                    setNoteId(displayNote.id);
+
+                    // ─── persist in DB ───────────────────────
+                    updateNote({
+                      id: displayNote.id,
+                      content: newContent,
+                      title: "",
+                    });
+
+                    // ─── reflect change in the sidebar list ─
+                    setNotes((prev) =>
+                      prev.map((n) =>
+                        n.id === displayNote.id
+                          ? { ...n, content: newContent }
+                          : n
+                      )
+                    );
+                  }}
+                  className="w-full h-60 p-4 rounded-md mt-4 focus:outline-none"
+                />
+              ) : /* 2️⃣ — “Create new” button was pressed → show CreateNote */
+              !isClicked ? (
+                <CreateNote
+                  userId={userId}
+                  noteId={noteId}
+                  setNoteId={setNoteId}
+                />
+              ) : (
+                /* 3️⃣ — Default (no note selected, not creating) → show the image */
+                <div className="hidden lg:block">
+                  <img src={createNoteImage} className="h-131 mt-3.5 ml-32" />
+                </div>
+              )
+            }
           </div>
         </div>
       </div>
