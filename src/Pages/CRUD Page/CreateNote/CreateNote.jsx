@@ -18,11 +18,14 @@ import DropdownMenu from "./../DropdownMenu/DropdownMenu.jsx";
 
 const CreateNote = ({
   userId,
-  setNoteId,
+  add,
   noteId,
-  setNotesContent,
+  setNoteId,
   displayNote,
+  setNotesContent,
   setNotes,
+  notesContent,
+  setAdd,
 }) => {
   // const [openDropdown, setOpenDropdown] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
@@ -31,6 +34,7 @@ const CreateNote = ({
   const [modifiedAt, setModifiedAt] = useState(null);
   const [lastSyncedAt, setLastSyncedAt] = useState(null);
   const [tags, setTags] = useState([]);
+  // const [noteId, setNoteId] = useState(null);
   const [title, setTitle] = useState("Untitled");
 
   const handleMarkdownToggle = () => console.log("Toggled Markdown");
@@ -38,6 +42,7 @@ const CreateNote = ({
   const handleInfo = () => setShowInfo(true);
   const handleInsertChecklist = () => toggleChecklistItem();
   // const handleMoveToTrash = () => console.log("Moved to Trash");
+
   const handleMoveToTrash = (id) => {
     if (!id) return;
 
@@ -185,7 +190,10 @@ const CreateNote = ({
           onPublish={handlePublish}
           onInfo={handleInfo}
           onInsertChecklist={handleInsertChecklist}
-          onMoveToTrash={handleMoveToTrash(noteId)}
+          onMoveToTrash={() => {
+            handleMoveToTrash(noteId);
+            setAdd(false);
+          }}
         />
 
         {/* Icons */}
@@ -207,12 +215,52 @@ const CreateNote = ({
       </div>
 
       {/* Textarea */}
-      <textarea
+
+      {add && (
+        <textarea
+          value={noteContent}
+          onChange={(e) => setNoteContent(e.target.value)}
+          placeholder="Write your note here..."
+          className="w-full h-60 p-4 rounded-md mt-4 focus:outline-none"
+        />
+      )}
+
+      {/* edit note  */}
+      {displayNote && (
+        <textarea
+          value={notesContent}
+          onChange={(e) => {
+            const newContent = e.target.value;
+
+            setNotesContent(newContent);
+            // setNoteId(displayNote.id);
+
+            // Update note in backend
+            updateNote({
+              id: displayNote.id,
+              content: newContent,
+              title: "",
+            });
+
+            // Update notes list in sidebar
+            setNotes((prevNotes) =>
+              prevNotes.map((note) =>
+                note.id === displayNote.id
+                  ? { ...note, content: newContent }
+                  : note
+              )
+            );
+          }}
+          className="w-full h-60 p-4 rounded-md mt-4 focus:outline-none"
+        />
+      )}
+
+      {/* <textarea
         value={noteContent}
         onChange={(e) => setNoteContent(e.target.value)}
         placeholder="Write your note here..."
         className="w-full h-60 p-4 rounded-md mt-4 focus:outline-none"
-      />
+      /> */}
 
       {/* Tags */}
       <div className="flex flex-wrap gap-2 mt-auto p-4 border-t border-gray-300">

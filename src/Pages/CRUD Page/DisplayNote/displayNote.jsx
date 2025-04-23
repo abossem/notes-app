@@ -20,6 +20,7 @@ const DisplayNote = () => {
   const [name, setName] = useState("");
   const [noteId, setNoteId] = useState(null);
   const [isClicked, setIsClicked] = useState(true);
+  const [add, setAdd] = useState(false);
 
   const location = useLocation();
   const { userId } = location.state || {};
@@ -43,6 +44,7 @@ const DisplayNote = () => {
     try {
       const data = await getNote(id);
       setDisplayNote(data);
+      setAdd(false);
     } catch (err) {
       console.log(err.message);
     }
@@ -91,8 +93,8 @@ const DisplayNote = () => {
     if (displayNote) {
       setNoteContent(displayNote.content);
     }
-  }, [displayNote]);
-  console.log(notes);
+  }, [userId, displayNote]);
+  // console.log(notes);
   const handleSearch = async (text) => {
     try {
       console.log(text);
@@ -108,7 +110,7 @@ const DisplayNote = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const handleClick = (index) => {
     setActiveIndex(index);
-    console.log("Clicked index:", index);
+    // console.log("Clicked index:", index);
   };
   /////////////////////////////////
   const [activeIndexSidebar, setActiveIndexSidebar] = useState(0);
@@ -289,6 +291,8 @@ const DisplayNote = () => {
               className="cursor-pointer"
               onClick={() => {
                 setIsClicked(!isClicked);
+                setAdd(true);
+                setDisplayNote(false);
               }}
             />
           </div>
@@ -321,6 +325,8 @@ const DisplayNote = () => {
                 key={index}
                 onClick={() => {
                   getNoteFunction(note.id);
+                  setAdd(false);
+                  setNoteId(note.id);
                 }}
               >
                 <li
@@ -381,20 +387,26 @@ const DisplayNote = () => {
             {/* {isClicked ? <img src={createNoteImage} className="h-131 mt-3.5 ml-32" />:<CreateNote userId={userId} />}
              */}
 
-            {/* {isClicked ? (
+            {isClicked ? (
               <div className="hidden lg:block">
                 <img src={createNoteImage} className="h-131 mt-3.5 ml-32" />
               </div>
             ) : (
               <CreateNote
                 userId={userId}
+                notesContent={noteContent}
+                displayNote={displayNote}
+                setAdd={setAdd}
+                setNotesContent={setNoteContent}
+                setNotes={setNotes}
+                add={add}
                 noteId={noteId}
                 setNoteId={setNoteId}
               />
-            )} */}
+            )}
 
-            {
-              /*  show the editor */
+            {/* {
+              //  show the editor
               displayNote ? (
                 <textarea
                   value={noteContent}
@@ -421,8 +433,8 @@ const DisplayNote = () => {
                   }}
                   className="w-full h-60 p-4 rounded-md mt-4 focus:outline-none"
                 />
-              ) : /* show CreateNote */
-              isClicked ? (
+              ) : // show CreateNote 
+              !isClicked ? (
                 <CreateNote
                   userId={userId}
                   noteId={noteId}
@@ -432,12 +444,12 @@ const DisplayNote = () => {
                   setNotes={setNotes}
                 />
               ) : (
-                /*  Default show the image */
+                 // Default show the image 
                 <div className="hidden lg:block">
                   <img src={createNoteImage} className="h-131 mt-3.5 ml-32" />
                 </div>
               )
-            }
+            } */}
           </div>
         </div>
       </div>
